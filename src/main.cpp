@@ -1,5 +1,7 @@
 #include <Arduino.h>
 #include "gyroscope.h"
+#include "wifi.h"
+#include "webServer.h"
 
 GyroSensor gs;
 
@@ -8,12 +10,19 @@ void setup() {
   while (!Serial) {
     delay(10);
   }
+  Serial.println("");
+
+
+  initializeWifi();
+  initializeWebServer();
 
   if (!gs.initialize()) {
     while (1) {
       delay(10);
     }
   }
+
+  // gs.caliberate();
 
   Serial.println("");
   delay(100);

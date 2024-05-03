@@ -1,5 +1,7 @@
-#include <vector>
+// #include <vector>
 #include "gyroscope.h"
+
+using std::vector;
 
 std::vector<sensors_event_t> GyroSensor::takeReadings() {
   sensors_event_t a, g, temp;
@@ -101,4 +103,15 @@ bool GyroSensor::initialize() {
   }
 
   return !failed;
+}
+
+void GyroSensor::caliberate() {
+  std::vector<XYZ> accel_readings;
+  std::vector<XYZ> gyro_readings;
+
+  // Take 20 readings and use the average as the offset
+  for (int i = 0; i < 20; i++) {
+    
+    Serial.println(i);
+  }
 }
