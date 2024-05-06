@@ -22,18 +22,18 @@ void setup() {
     }
   }
 
-  // gs.caliberate();
+  gs.caliberate();
 
   Serial.println("");
   delay(100);
 }
 
 void loop() {
-  std::vector<sensors_event_t> readings = gs.takeReadings();
+  auto readings = gs.takeReadings();
   
-  gs.printReadingsToSerial(readings[0], readings[1], readings[2]);
+  gs.printReadingsToSerial(readings[0], readings[1]);
   // uploadGyroscopeReading(readings[0], readings[1]);
 
   Serial.println("");
-  delay(500);
+  delay(1000);
 }

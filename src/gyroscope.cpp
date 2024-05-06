@@ -3,34 +3,49 @@
 
 using std::vector;
 
-std::vector<sensors_event_t> GyroSensor::takeReadings() {
+std::vector<XYZ> GyroSensor::takeReadings() {
   sensors_event_t a, g, temp;
   mpu.getEvent(&a, &g, &temp);
+  
+  // Adjusting for error using the offset calculated during caliberation
+  XYZ acceleration = {
+    x: a.acceleration.x - accel_offset.x,
+    y: a.acceleration.y - accel_offset.y,
+    z: a.acceleration.z - accel_offset.z,
+  };
+  
+  XYZ gyro = {
+    x: g.gyro.x - gyro_offset.x,
+    y: g.gyro.y - gyro_offset.y,
+    z: g.gyro.z - gyro_offset.z,
+  };
 
-  return std::vector<sensors_event_t>{a, g, temp};
+  // float temperature = temp.temperature;
+
+  return std::vector<XYZ>{acceleration, gyro};
 }
 
-void GyroSensor::printReadingsToSerial(sensors_event_t &a, sensors_event_t &g, sensors_event_t &temp) {
+void GyroSensor::printReadingsToSerial(XYZ &a, XYZ &g) {
   /* Print out the values */
   Serial.print("Acceleration X: ");
-  Serial.print(a.acceleration.x);
+  Serial.print(a.x);
   Serial.print(", Y: ");
-  Serial.print(a.acceleration.y);
+  Serial.print(a.y);
   Serial.print(", Z: ");
-  Serial.print(a.acceleration.z);
+  Serial.print(a.z);
   Serial.println(" m/s^2");
 
   Serial.print("Rotation X: ");
-  Serial.print(g.gyro.x);
+  Serial.print(g.x);
   Serial.print(", Y: ");
-  Serial.print(g.gyro.y);
+  Serial.print(g.y);
   Serial.print(", Z: ");
-  Serial.print(g.gyro.z);
+  Serial.print(g.z);
   Serial.println(" rad/s");
 
-  Serial.print("Temperature: ");
-  Serial.print(temp.temperature);
-  Serial.println(" degC");
+  // Serial.print("Temperature: ");
+  // Serial.print(temp.temperature);
+  // Serial.println(" degC");
 }
 
 bool GyroSensor::initialize() {
@@ -105,13 +120,62 @@ bool GyroSensor::initialize() {
   return !failed;
 }
 
+XYZ vecAverage(std::vector<XYZ>& vec) {
+  XYZ res;
+
+  for (int i = 0; i < vec.size(); i++) {
+    res.x += vec[i].x;
+    res.y += vec[i].y;
+    res.z += vec[i].z;
+  }
+
+  res.x /= vec.size();
+  res.y /= vec.size();
+  res.z /= vec.size();
+
+  return res;
+}
+
 void GyroSensor::caliberate() {
+  // Delay so sensor can reach steady state (settle in).
+  delay(3000);
+
   std::vector<XYZ> accel_readings;
   std::vector<XYZ> gyro_readings;
 
-  // Take 20 readings and use the average as the offset
-  for (int i = 0; i < 20; i++) {
+  Serial.println("Caliberating...");
+
+  // Take 10 readings and use the average as the offset
+  for (int i = 0; i < 10; i++) {
+    auto readings = takeReadings();
+
+    XYZ new_accel_reading = {
+      x: readings[0].x,
+      y: readings[0].y,
+      z: readings[0].z - 9.8
+    };
+  
+    XYZ new_gyro_reading = {
+      x: readings[1].x,
+      y: readings[1].y,
+      z: readings[1].z
+    };
     
-    Serial.println(i);
+
+    accel_readings.push_back(new_accel_reading);
+    gyro_readings.push_back(new_gyro_reading);
+
+    delay(3000);
+    std::cout << "Count: " + std::to_string(i) << " - Acceleration: X - " << new_accel_reading.x << " Y - " << new_accel_reading.y << " Z - " << new_accel_reading.z << " - GYRO: X - " << new_gyro_reading.x << " Y - " << new_gyro_reading.y << " Z - " << new_gyro_reading.z << "\n"; 
   }
+
+  XYZ mean_accel = vecAverage(accel_readings);
+  XYZ mean_gyro = vecAverage(gyro_readings);
+
+  accel_offset = mean_accel;
+  gyro_offset = mean_gyro;
+
+  std::cout << "Acceleration: X - " << mean_accel.x << " Y - " << mean_accel.y << " Z - " << mean_accel.z << "\n"; 
+  std::cout << "GYRO: X - " << mean_gyro.x << " Y - " << mean_gyro.y << " Z - " << mean_gyro.z << "\n"; 
+  Serial.println("Done Caliberating");
 }
