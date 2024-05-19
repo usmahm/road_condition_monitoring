@@ -49,6 +49,8 @@ void GyroSensor::printReadingsToSerial(XYZ &a, XYZ &g) {
 }
 
 bool GyroSensor::initialize() {
+  Serial.print("Initializing Gyroscope");
+
   bool failed = false;
   if (!mpu.begin()) {
     failed = true;
@@ -143,7 +145,7 @@ void GyroSensor::caliberate() {
   std::vector<XYZ> accel_readings;
   std::vector<XYZ> gyro_readings;
 
-  Serial.println("Caliberating...");
+  Serial.println("Caliberating Gyroscope...");
 
   // Take 10 readings and use the average as the offset
   for (int i = 0; i < 10; i++) {

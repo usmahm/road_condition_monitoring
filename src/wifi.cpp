@@ -1,8 +1,8 @@
 #include "wifi.h"
 // #include "serialLogger.h"
 
-const char* ssid = "STARLINK";
-const char* password = "Rainigeria.";
+const char* ssid = "raspit";
+const char* password = "raspit1ras";
 
 bool initializeWifi(bool keep_retrying) {
   Serial.println("Initializing WIFI...");
@@ -12,7 +12,7 @@ bool initializeWifi(bool keep_retrying) {
   if (keep_retrying) {
     while(WiFi.status() != WL_CONNECTED) {
       delay(1000);
-      // print(".");
+      Serial.print(".");
     }
   } else {
     if (WiFi.waitForConnectResult() != WL_CONNECTED) {
