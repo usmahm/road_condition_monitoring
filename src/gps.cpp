@@ -33,13 +33,13 @@ std::optional<GPSReading> GPS::takeGPSReading() {
 
   if (gps.location.isValid() && gps.satellites.isValid() && gps.speed.isValid()) {
 
-    GPSReading reading;
-
     // Note: lat and lng returns previous values read even when sattellites in view = 0 (To be handled it later)
-    reading.latitude = gps.location.lat();
-    reading.longitude = gps.location.lng();
-    reading.satellites = gps.satellites.value();
-    reading.speed = gps.speed.kmph();
+    GPSReading reading(
+      gps.satellites.value(),
+      gps.location.lat(),
+      gps.location.lng(),
+      gps.speed.kmph()
+    );
 
     return reading;
   } else {

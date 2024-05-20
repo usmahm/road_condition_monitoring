@@ -5,19 +5,16 @@
 #include <SoftwareSerial.h>
 #include <iostream>
 
-// static const int TXPin = D5, RXPin = D6;
-// static const int TXPin = D6, RXPin = D5;
-
-// static TinyGPSPlus gps;
-
 extern SoftwareSerial ss;
 
 struct GPSReading {
-  int satellites;
-  float latitude;
-  float longitude;
+  uint32_t satellites;
+  double latitude;
+  double longitude;
   // DateTime
-  float speed; // in kmph
+  double speed; // in kmph
+
+  GPSReading(uint32_t s, double lat, double lng, double sp) : satellites(s), latitude(lat), longitude(lng), speed(sp) {}
 };
 
 namespace GPS {
