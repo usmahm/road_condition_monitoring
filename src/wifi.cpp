@@ -1,8 +1,8 @@
 #include "wifi.h"
 // #include "serialLogger.h"
 
-const char* ssid = "RAIN 23 CLASS 2G";
-const char* password = "Rainigeria.";
+const char* ssid = WIFISSID;
+const char* password = WIFI_PASSWORD;
 
 bool initializeWifi(bool keep_retrying) {
   Serial.println("Initializing WIFI...");
