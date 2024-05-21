@@ -4,6 +4,7 @@
 #include <TinyGPSPlus.h>
 #include <SoftwareSerial.h>
 #include <iostream>
+#include "customLogger.h"
 
 extern SoftwareSerial ss;
 

@@ -8,7 +8,7 @@ SoftwareSerial ss(RXPin, TXPin);
 
 
 void GPS::initialize(int baudrate) {
-  Serial.println("Initializing GPS Module");
+  CustomLogger::println("Initializing GPS Module");
   ss.begin(baudrate);
 
   // To check GPS connection
@@ -20,7 +20,7 @@ void GPS::initialize(int baudrate) {
   } while (millis() - start < 1000);
   
   if (gps.charsProcessed() < 10) {
-    Serial.println (F("No GPS detected: check wiring."));
+    CustomLogger::println (F("No GPS detected: check wiring."));
   }
 }
 
@@ -44,8 +44,8 @@ std::optional<GPSReading> GPS::takeGPSReading() {
     return reading;
   } else {
     if (gps.satellites.isValid()) {
-      Serial.print("satellites: ");
-      Serial.println(gps.satellites.value());
+      CustomLogger::print("satellites: ");
+      CustomLogger::println(gps.satellites.value());
     }
   }
 

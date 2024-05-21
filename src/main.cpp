@@ -2,7 +2,7 @@
 #include "gyroscope.h"
 #include "wifi.h"
 #include "webServer.h"
-#include "serialLogger.h"
+#include "customLogger.h"
 #include "gps.h"
 
 int baudrate = 9600;
@@ -13,12 +13,13 @@ void setup() {
   while (!Serial) {
     delay(10);
   }
-  Serial.println("RUNNING");
-
 
   initializeWifi();
   initializeWebServer();
-  initializeSerialLogger();
+  
+  CustomLogger::initializeSerialLogger();
+  
+  CustomLogger::println("RUNNING");
 
   if (!gs.initialize()) {
     while (1) {
@@ -30,7 +31,7 @@ void setup() {
 
   GPS::initialize(baudrate);
 
-  Serial.println("");
+  CustomLogger::println("");
   delay(100);
 }
 
@@ -44,11 +45,11 @@ void loop() {
     // GPS::print();
     GPS::printGPSReading(*gpsReading);
   } else {
-    Serial.print("Invalid GPS Reading");
+    CustomLogger::print("Invalid GPS Reading");
   }
   
   // uploadGyroscopeReading(readings[0], readings[1]);
 
-  Serial.println("");
+  CustomLogger::println("");
   delay(1000);
 }

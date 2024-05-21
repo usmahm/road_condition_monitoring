@@ -27,95 +27,95 @@ std::vector<XYZ> GyroSensor::takeReadings() {
 
 void GyroSensor::printReadingsToSerial(XYZ &a, XYZ &g) {
   /* Print out the values */
-  Serial.print("Acceleration X: ");
-  Serial.print(a.x);
-  Serial.print(", Y: ");
-  Serial.print(a.y);
-  Serial.print(", Z: ");
-  Serial.print(a.z);
-  Serial.println(" m/s^2");
+  CustomLogger::print("Acceleration X: ");
+  CustomLogger::print(a.x);
+  CustomLogger::print(", Y: ");
+  CustomLogger::print(a.y);
+  CustomLogger::print(", Z: ");
+  CustomLogger::print(a.z);
+  CustomLogger::println(" m/s^2");
 
-  Serial.print("Rotation X: ");
-  Serial.print(g.x);
-  Serial.print(", Y: ");
-  Serial.print(g.y);
-  Serial.print(", Z: ");
-  Serial.print(g.z);
-  Serial.println(" rad/s");
+  CustomLogger::print("Rotation X: ");
+  CustomLogger::print(g.x);
+  CustomLogger::print(", Y: ");
+  CustomLogger::print(g.y);
+  CustomLogger::print(", Z: ");
+  CustomLogger::print(g.z);
+  CustomLogger::println(" rad/s");
 
-  // Serial.print("Temperature: ");
-  // Serial.print(temp.temperature);
-  // Serial.println(" degC");
+  // CustomLogger::print("Temperature: ");
+  // CustomLogger::print(temp.temperature);
+  // CustomLogger::println(" degC");
 }
 
 bool GyroSensor::initialize() {
-  Serial.print("Initializing Gyroscope");
+  CustomLogger::print("Initializing Gyroscope");
 
   bool failed = false;
   if (!mpu.begin()) {
     failed = true;
-    Serial.println("Failed to find MPU6050 chip");
+    CustomLogger::println("Failed to find MPU6050 chip");
   }
 
-  Serial.println("MPU6050 Found!");
+  CustomLogger::println("MPU6050 Found!");
 
   mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
-  Serial.print("Accelerometer range set to: ");
+  CustomLogger::print("Accelerometer range set to: ");
   switch (mpu.getAccelerometerRange()) {
     case MPU6050_RANGE_2_G:
-      Serial.println("+-2G");
+      CustomLogger::println("+-2G");
       break;
     case MPU6050_RANGE_4_G:
-      Serial.println("+-4G");
+      CustomLogger::println("+-4G");
       break;
     case MPU6050_RANGE_8_G:
-      Serial.println("+-8G");
+      CustomLogger::println("+-8G");
       break;
     case MPU6050_RANGE_16_G:
-      Serial.println("+-16G");
+      CustomLogger::println("+-16G");
       break;
   }
  
   mpu.setGyroRange(MPU6050_RANGE_500_DEG);
-  Serial.print("Gyro range set to: ");
+  CustomLogger::print("Gyro range set to: ");
   switch (mpu.getGyroRange()) {
     case MPU6050_RANGE_250_DEG:
-      Serial.println("+- 250 deg/s");
+      CustomLogger::println("+- 250 deg/s");
       break;
     case MPU6050_RANGE_500_DEG:
-      Serial.println("+- 500 deg/s");
+      CustomLogger::println("+- 500 deg/s");
       break;
     case MPU6050_RANGE_1000_DEG:
-      Serial.println("+- 1000 deg/s");
+      CustomLogger::println("+- 1000 deg/s");
       break;
     case MPU6050_RANGE_2000_DEG:
-      Serial.println("+- 2000 deg/s");
+      CustomLogger::println("+- 2000 deg/s");
       break;
   }
 
   mpu.setFilterBandwidth(MPU6050_BAND_5_HZ);
-  Serial.print("Filter bandwidth set to: ");
+  CustomLogger::print("Filter bandwidth set to: ");
   switch (mpu.getFilterBandwidth()) {
     case MPU6050_BAND_260_HZ:
-      Serial.println("260 Hz");
+      CustomLogger::println("260 Hz");
       break;
     case MPU6050_BAND_184_HZ:
-      Serial.println("184 Hz");
+      CustomLogger::println("184 Hz");
       break;
     case MPU6050_BAND_94_HZ:
-      Serial.println("94 Hz");
+      CustomLogger::println("94 Hz");
       break;
     case MPU6050_BAND_44_HZ:
-      Serial.println("44 Hz");
+      CustomLogger::println("44 Hz");
       break;
     case MPU6050_BAND_21_HZ:
-      Serial.println("21 Hz");
+      CustomLogger::println("21 Hz");
       break;
     case MPU6050_BAND_10_HZ:
-      Serial.println("10 Hz");
+      CustomLogger::println("10 Hz");
       break;
     case MPU6050_BAND_5_HZ:
-      Serial.println("5 Hz");
+      CustomLogger::println("5 Hz");
       break;
   }
 
@@ -145,7 +145,7 @@ void GyroSensor::caliberate() {
   std::vector<XYZ> accel_readings;
   std::vector<XYZ> gyro_readings;
 
-  Serial.println("Caliberating Gyroscope...");
+  CustomLogger::println("Caliberating Gyroscope...");
 
   // Take 10 readings and use the average as the offset
   for (int i = 0; i < 10; i++) {
@@ -179,5 +179,5 @@ void GyroSensor::caliberate() {
 
   std::cout << "Acceleration: X - " << mean_accel.x << " Y - " << mean_accel.y << " Z - " << mean_accel.z << "\n"; 
   std::cout << "GYRO: X - " << mean_gyro.x << " Y - " << mean_gyro.y << " Z - " << mean_gyro.z << "\n"; 
-  Serial.println("Done Caliberating");
+  CustomLogger::println("Done Caliberating");
 }

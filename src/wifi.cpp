@@ -1,7 +1,7 @@
 #include "wifi.h"
 // #include "serialLogger.h"
 
-const char* ssid = "STARLINK";
+const char* ssid = "RAIN 23 CLASS 2G";
 const char* password = "Rainigeria.";
 
 bool initializeWifi(bool keep_retrying) {
